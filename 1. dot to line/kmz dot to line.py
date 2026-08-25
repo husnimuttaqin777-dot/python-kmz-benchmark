@@ -57,7 +57,7 @@ def kmz_points_to_line(input_path, output_path, line_name="Tracking Line"):
 
 if __name__ == '__main__':
     kmz_points_to_line(
-        'PKKPRL Dumai Rupat.kmz',
-        'PKKPRL Dumai Rupat line.kmz',
-        line_name='PKKPRL Dumai'
+        'Titik Interpolasi raw.kmz',
+        'Titik Interpolasi raw line.kmz',
+        line_name='Titik Interpolasi raw'
     )

@@ -215,9 +215,21 @@ def write_kmz_from_kml(kml_text, output_kmz, work_dir="/tmp/intersect_out"):
 def write_csv(results, output_csv):
     with open(output_csv, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["No", "Nama Titik", "Jarak (m)"])
+        writer.writerow([
+            "No", "Nama Titik",
+            "Latitude Titik", "Longitude Titik",
+            "Latitude Proyeksi", "Longitude Proyeksi",
+            "Jarak (m)",
+        ])
         for i, r in enumerate(results, start=1):
-            writer.writerow([i, r["name"], f'{r["dist"]:.3f}'])
+            plon, plat = r["point"]
+            jlon, jlat = r["proj"]
+            writer.writerow([
+                i, r["name"],
+                f"{plat:.7f}", f"{plon:.7f}",
+                f"{jlat:.7f}", f"{jlon:.7f}",
+                f'{r["dist"]:.3f}',
+            ])
 
 
 # ----------------------------------------------------------------------
@@ -269,8 +281,8 @@ def intersect_kmz(titik_kmz, garis_kmz, output_kmz, output_csv):
 # KONFIGURASI (HARD CODE) — ubah bagian ini sesuai kebutuhan
 # ----------------------------------------------------------------------
 
-TITIK_KMZ = "titik interpolasi.kmz"                          # file KMZ berisi titik-titik
-GARIS_KMZ = "PKKPRL Dumai Rupat Line.kmz"                          # file KMZ berisi garis referensi
+TITIK_KMZ = "titik interpolasi.kmz"              # file KMZ berisi titik-titik
+GARIS_KMZ = "PKKPRL Dumai Rupat Line.kmz"        # file KMZ berisi garis referensi
 OUTPUT_KMZ = "garis_intersection.kmz"            # output: garis intersection
 OUTPUT_CSV = "tabel_jarak_intersection.csv"      # output: tabel no & jarak
 
