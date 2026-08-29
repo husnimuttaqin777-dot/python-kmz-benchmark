@@ -223,8 +223,8 @@ def interpolate_kmz(input_kmz, output_kmz, spacing=10.0, gap_factor=1.5,
 # KONFIGURASI (HARD CODE) — ubah bagian ini sesuai kebutuhan
 # ----------------------------------------------------------------------
 
-INPUT_KMZ = "PKKPRL Dumai Rupat.kmz"     # path file .kmz sumber
-OUTPUT_KMZ = "output.kmz"  # path file .kmz hasil
+INPUT_KMZ = "batam.kmz"     # path file .kmz sumber
+OUTPUT_KMZ = "batam_out.kmz"  # path file .kmz hasil
 
 SPACING = 5        # jarak target antar titik (meter)
 GAP_FACTOR = 0.5       # ruas dianggap "perlu interpolasi" kalau jaraknya > SPACING * GAP_FACTOR
