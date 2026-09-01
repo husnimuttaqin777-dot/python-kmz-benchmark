@@ -113,7 +113,7 @@ Window {
 		
 		Text {
 			y : -((parent.height * 1/4 ))
-			text : "text to dot"
+			text : "line to dot"
 			font.pixelSize : 22
 			color : "pink"
 			font.family: "Helvetica"
