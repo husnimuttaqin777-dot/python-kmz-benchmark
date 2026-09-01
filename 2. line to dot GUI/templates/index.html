@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>KMZ Processor</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+
+            background: white;
+
+            width: 400px;
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.15);
+
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #007bff;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #downloadButton {
+
+            display: none;
+
+            margin-top: 15px;
+
+            background: #28a745;
+        }
+
+        #downloadButton:hover {
+            background: #1e7e34;
+        }
+
+        #status {
+
+            margin-top: 20px;
+
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>KMZ Processor</h1>
+
+    <!-- Browse -->
+    <input
+        type="file"
+        id="fileInput"
+        accept=".kmz"
+    >
+	
+	<label for="distanceSlider">
+    Jarak titik:
+    <span id="distanceValue">10</span> meter
+	</label>
+
+	<input
+		type="range"
+		id="distanceSlider"
+		min="0"
+		max="100"
+		value="10"
+		step="1"
+		style="width: 100%;"
+	>
+
+    <!-- Process -->
+    <button
+        onclick="processKMZ()"
+    >
+        Process
+    </button>
+
+    <!-- Status -->
+    <div id="status"></div>
+
+    <!-- Download -->
+    <button
+        id="downloadButton"
+        onclick="downloadResult()"
+    >
+        Download
+    </button>
+
+</div>
+
+
+<script>
+
+const slider = document.getElementById("distanceSlider");
+const distanceValue = document.getElementById("distanceValue");
+
+slider.addEventListener("input", function () {
+
+    distanceValue.innerText = this.value;
+
+});
+
+let downloadURL = null;
+
+
+async function processKMZ() {
+
+    const fileInput =
+        document.getElementById("fileInput");
+
+    const status =
+        document.getElementById("status");
+
+    const downloadButton =
+        document.getElementById("downloadButton");
+		
+		
+	const slider =
+        document.getElementById("distanceSlider");
+
+    const distance =
+        slider.value;
+		
+	console.log(distance)
+
+
+    // Check file
+
+    if (fileInput.files.length === 0) {
+
+        status.innerText =
+            "Silakan pilih file KMZ terlebih dahulu.";
+
+        return;
+    }
+
+
+    const file =
+        fileInput.files[0];
+
+
+    // Check extension
+
+    if (!file.name.toLowerCase().endsWith(".kmz")) {
+
+        status.innerText =
+            "File harus berformat KMZ.";
+
+        return;
+    }
+
+
+    // FormData
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+	formData.append("distance", distance);
+
+    // UI
+
+    status.innerText =
+        "Processing...";
+
+    downloadButton.style.display =
+        "none";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/process",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            status.innerText =
+                result.message;
+
+            return;
+        }
+
+
+        // Processing selesai
+
+        status.innerText =
+            "Processing selesai!";
+
+
+        // Simpan URL download
+
+        downloadURL =
+            result.download;
+
+
+        // Tampilkan tombol
+
+        downloadButton.style.display =
+            "block";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.innerText =
+            "Terjadi error saat processing.";
+
+    }
+
+}
+
+
+function downloadResult() {
+
+    if (!downloadURL) {
+        return;
+    }
+
+    window.location.href =
+        downloadURL;
+
+}
+
+</script>
+
+</body>
+
+</html>
