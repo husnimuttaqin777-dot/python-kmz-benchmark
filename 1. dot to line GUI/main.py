@@ -96,7 +96,7 @@ class table(QObject):
         print("input", input_file)
         print("output", output_file)
         
-        kmz_points_to_line(str(input_file), str(output_file),color ,line_name='none')
+        kmz_points_to_line(str(input_file), str(output_file)+str(".kmz"),color ,line_name='none')
         
         print("berhasil")
         

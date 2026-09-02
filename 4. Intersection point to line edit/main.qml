@@ -10,15 +10,16 @@ import QtQuick.Dialogs 1.3
 Window {
 	flags: Qt.Dialog
 	id : root
-	width: 350
+	width: 1000
 	maximumWidth : width
 	minimumWidth : width
-    height: 400
+    height: 350
 	maximumHeight : height
 	minimumHeight : height
 	title:"membuat windows"
 	color : "#0B0B45"
     visible: true
+	
 	
 	function colorToKml(color) {
 		var r = Math.round(color.r * 255)
@@ -32,163 +33,119 @@ Window {
 
 		return hex(a) + hex(b) + hex(g) + hex(r)
 	}
-    
+
+
+
 	
 	Text{
 	id : text1
 	x:0
 	y:0
-	text:"software dot to line"
+	text:"SOFTWARE INTERSECTION"
 	color: "#87CEEB"
 	font.family  : "seven segment"
 	font.pixelSize: 25
 	font.bold : true	
-	
-	
 	}
 	
 	
 	Text{
 	id : file_input_text
-	x:0
-	y:40
-	text:"input dir"
+	x:10
+	y:125
+	text:"input line"
 	color: "#87CEEB"
 	font.family  : "seven segment"
 	font.pixelSize: 16
-	font.bold : true	
+	font.bold : true
+	}
+	
+	Text{
+	id : file_input_line
+	x:0
+	y:50
+	text:"input point"
+	color: "#87CEEB"
+	font.family  : "seven segment"
+	font.pixelSize: 16
+	font.bold : true
+	}
 	
 	Button{
 	 x :0
-	 y :30
+	 y :75
 	 text : "select file"
 	 onClicked: file_select.open()
 	}
 	
-	
+	Button{
+	 x :0
+	 y :150
+	 text : "select file"
+	 onClicked: file_select1.open()
 	}
-	
-	
+
 	TextField{
 	id : file_output_text
 	x:0
-	y:150
+	y:220
 	text:""
 	color: "black"
 	font.family  : "seven segment"
 	font.pixelSize: 16
 	font.bold : true	
+	}
 	
 	Text{
-	id : named_file
-	x:0
-	y:-30
+	id : output_name
+	x:50
+	y:200
 	text:"Nama File"
 	color: "#87CEEB"
 	font.family  : "seven segment"
 	font.pixelSize: 16
 	font.bold : true	
 	}
+	
 	Button{
-	 x :10
-	 y :200
+	 x :-10
+	 y :280
 	 text : "RUN"
-	 onClicked:{
-	 backend.button_run(file_input_text.text, file_output_text.text, line_color.text)
+	onClicked:{
+	 backend.button_run(file_input_text.text, file_input_line.text, file_output_text.text)
 	 
 	 }
 	}
-	
 
-	}
-	
-	Button{
-	 x:10
-	y:200
-	 text : "SELECT COLOR"
-	 onClicked:{
-	 colorDialog.visible = true
-	 }
-	}
-	
-	Slider {
-		id: slider1
-		visible : false
-		x:300
-		y:150
-		height: 20
-		width: 100
-		value: 0
-		from:0
-		to: 200
-		stepSize: 10
-		orientation: Qt.Horizontal
-		onValueChanged: {
-		}
-		
-		Text{
-			id : interval_jarak
-			x:slider1.width
-			y:0
-			text:slider1.value
-			color: "#87CEEB"
-			font.family  : "seven segment"
-			font.pixelSize: 16
-			font.bold : true	
-			
-			
-			}
-}
-
-Rectangle{
-	id : color_example
-	x: 0
-	y:250
-	width : 70
-	height : 70
-	color : "#122e55"
-	
-	}
-
-
-	Text{
-	id : line_color
-	x:0
-	y:275
-	text:"#ffff0000"
-	color: "#87CEEB"
-	font.family  : "seven segment"
-	font.pixelSize: 16
-	font.bold : true	
-	visible : true
-	
-	
-
-	}
-	
-	ColorDialog {
-        id: colorDialog
-        title: "Pilih Warna"
-		visible : false
-        onAccepted: {
-            var kmlColor = colorToKml(colorDialog.color)
-        console.log(kmlColor)
-			line_color.text  = "#" + kmlColor
-			color_example.color = colorDialog.color
-        }
-    }
-	
-	
-	
 	 FileDialog {
         id: file_select
         title: "Pilih sebuah file"
 
         onAccepted: {
 		 file_input_text.text = String(file_select.fileUrl).replace("file:///", "")
+		 console.log("file_input_text")
         }
-    }
+		
+	
+	}
+	
+	
+	FileDialog {
+        id: file_select1
+        title: "Pilih sebuah file"
+
+        onAccepted: {
+		 file_input_line.text = String(file_select1.fileUrl).replace("file:///", "")
+		 console.log("file_input_line")
+        }
+		
+	
+	}
+		
+		
+		
 }
+	 
 
 
 

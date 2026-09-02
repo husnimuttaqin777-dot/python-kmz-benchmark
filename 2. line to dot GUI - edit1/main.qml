@@ -13,7 +13,7 @@ Window {
 	width: 350
 	maximumWidth : width
 	minimumWidth : width
-    height: 400
+    height: 350
 	maximumHeight : height
 	minimumHeight : height
 	title:"membuat windows"
@@ -38,7 +38,7 @@ Window {
 	id : text1
 	x:0
 	y:0
-	text:"software dot to line"
+	text:"software line to dot"
 	color: "#87CEEB"
 	font.family  : "seven segment"
 	font.pixelSize: 25
@@ -89,22 +89,36 @@ Window {
 	font.pixelSize: 16
 	font.bold : true	
 	}
+	
+	Text{
+	id : file_nominal
+	x:0
+	y:45
+	text:"Interval Jarak"
+	color: "#87CEEB"
+	font.family  : "seven segment"
+	font.pixelSize: 16
+	font.bold : true	
+	
+	
+	
 	Button{
-	 x :10
-	 y :200
+	 x :-10
+	 y :80
 	 text : "RUN"
 	 onClicked:{
-	 backend.button_run(file_input_text.text, file_output_text.text, line_color.text)
+	 backend.button_run(file_input_text.text, file_output_text.text, slider1.value)
 	 
 	 }
 	}
+	}
 	
-
 	}
 	
 	Button{
 	 x:10
 	y:200
+	visible : false
 	 text : "SELECT COLOR"
 	 onClicked:{
 	 colorDialog.visible = true
@@ -113,14 +127,13 @@ Window {
 	
 	Slider {
 		id: slider1
-		visible : false
-		x:300
-		y:150
+		x:-10
+		y:220
 		height: 20
-		width: 100
+		width: 250
 		value: 0
 		from:0
-		to: 200
+		to: 300
 		stepSize: 10
 		orientation: Qt.Horizontal
 		onValueChanged: {
@@ -128,8 +141,8 @@ Window {
 		
 		Text{
 			id : interval_jarak
-			x:slider1.width
-			y:0
+			x:20
+			y:30
 			text:slider1.value
 			color: "#87CEEB"
 			font.family  : "seven segment"
@@ -140,43 +153,8 @@ Window {
 			}
 }
 
-Rectangle{
-	id : color_example
-	x: 0
-	y:250
-	width : 70
-	height : 70
-	color : "#122e55"
-	
-	}
 
-
-	Text{
-	id : line_color
-	x:0
-	y:275
-	text:"#ffff0000"
-	color: "#87CEEB"
-	font.family  : "seven segment"
-	font.pixelSize: 16
-	font.bold : true	
-	visible : true
 	
-	
-
-	}
-	
-	ColorDialog {
-        id: colorDialog
-        title: "Pilih Warna"
-		visible : false
-        onAccepted: {
-            var kmlColor = colorToKml(colorDialog.color)
-        console.log(kmlColor)
-			line_color.text  = "#" + kmlColor
-			color_example.color = colorDialog.color
-        }
-    }
 	
 	
 	
