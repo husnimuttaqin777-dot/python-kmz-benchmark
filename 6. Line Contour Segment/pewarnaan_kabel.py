@@ -2,6 +2,12 @@
 Skrip untuk mewarnai jalur kabel (garis) berdasarkan kedalaman yang diambil
 dari peta kontur, lalu menyimpannya sebagai file .kmz baru.
 
+Kelas kedalaman:
+    0  - 10 m  -> hijau
+    10 - 15 m  -> kuning
+    15 - 28 m  -> merah
+    > 28 m     -> ungu
+
 Cara pakai:
     python pewarnaan_kabel.py
 
@@ -14,7 +20,6 @@ Ketergantungan (install sekali):
 """
 
 import os
-import shutil
 import tempfile
 import zipfile
 import xml.etree.ElementTree as ET
@@ -29,20 +34,26 @@ NS = {"kml": "http://www.opengis.net/kml/2.2"}
 # ---------------------------------------------------------------------------
 # Batas kedalaman (meter) & warna -> UBAH DI SINI kalau perlu
 # ---------------------------------------------------------------------------
-BATAS_KEDALAMAN = [10.0, 15.0]   # pemisah kelas: 0-10 | 10-15 | 15-keatas
+# Batas kelas: 0-10 | 10-15 | 15-28 | >28
+BATAS_KEDALAMAN = [10.0, 15.0, 28.0]
 
 WARNA_KML = {
     # format KML: aabbggrr (alpha, biru, hijau, merah)
-    "hijau":  "ff00c853",
-    "kuning": "ff00d7ff",
-    "merah":  "ff2020e6",
+    "hijau":  "ff00c853",   # 0 - 10 m
+    "kuning": "ff00d7ff",   # 10 - 15 m
+    "merah":  "ff2020e6",   # 15 - 28 m
+    "ungu":   "ffb00080",   # > 28 m
 }
 
 LABEL_KELAS = {
     "hijau":  "0 - 10 m (Hijau)",
     "kuning": "10 - 15 m (Kuning)",
     "merah":  "15 - 28 m (Merah)",
+    "ungu":   "> 28 m (Ungu)",
 }
+
+# urutan kelas sesuai urutan BATAS_KEDALAMAN, dipakai oleh _klasifikasi()
+URUTAN_KELAS = ["hijau", "kuning", "merah", "ungu"]
 
 
 # ---------------------------------------------------------------------------
@@ -114,16 +125,13 @@ def _baca_titik_kabel(input_line):
 
 
 # ---------------------------------------------------------------------------
-# 3. Kelaskan kedalaman -> nama warna
+# 3. Kelaskan kedalaman -> nama warna (mendukung berapa pun jumlah batas)
 # ---------------------------------------------------------------------------
 def _klasifikasi(depth):
-    b1, b2 = BATAS_KEDALAMAN
-    if depth <= b1:
-        return "hijau"
-    elif depth <= b2:
-        return "kuning"
-    else:
-        return "merah"
+    for batas, nama_kelas in zip(BATAS_KEDALAMAN, URUTAN_KELAS):
+        if depth <= batas:
+            return nama_kelas
+    return URUTAN_KELAS[-1]  # lebih besar dari batas terakhir
 
 
 # ---------------------------------------------------------------------------
